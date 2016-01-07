@@ -1,2 +1,5 @@
 GCO/
 STL/
+Felix/
+*.lnk
+.gitignore
