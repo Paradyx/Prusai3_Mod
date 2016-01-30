@@ -168,6 +168,8 @@ Here are some standard links for getting your machine calibrated:
 #define HEATER_3_MINTEMP 5
 #define BED_MINTEMP 5
 
+
+
 // When temperature exceeds max temp, your heater will be switched off.
 // This feature exists to protect your hotend from overheating accidentally, but *NOT* from thermistor short/failure!
 // You should use MINTEMP for thermistor short/failure protection.
@@ -588,6 +590,7 @@ const bool Z_MIN_PROBE_ENDSTOP_INVERTING = true; // set to true to invert the lo
 // default settings
 
 #define DEFAULT_AXIS_STEPS_PER_UNIT   {80,80,2560,180}  // default steps per unit for Ultimaker
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {80,80,2133.33,180}  // default steps for our machine with TR8x1.5 z-rod
 #define DEFAULT_MAX_FEEDRATE          {200, 200, 5, 35}    // (mm/sec)
 #define DEFAULT_MAX_ACCELERATION      {2000,2000,100,2000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for Skeinforge 40+, for older versions raise them a lot.
 
