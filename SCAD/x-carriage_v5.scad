@@ -27,6 +27,7 @@ s_vertikal=11.5;
 //Klammer
 wandstaerke=2;
 d_bushing=12;
+d_bushing_corr =0.5; // Korrektur für die lockere Öffnung;
 h_bushing=15;
 
 oeffnung_geschlossen=90; //Winkel der öffnung
@@ -60,12 +61,12 @@ ct_z=gr_z+5;
 
     //Federsteg
     steg_y = fad_y; //Länge
-    steg_z = gr_z+1; //So dick wie die Platte
+    steg_z = gr_z+1-d_bushing_corr/2; //So dick wie die Platte
     steg_x = 2; // Dicke
 
 
 //Klammerplatte
-module clamp(wandstaerke,d_bushing,h_bushing, oeffnung ) {
+module clamp(wandstaerke,d_bushing,h_bushing, oeffnung, d_bushing_corr=0) {
     rotate([0,90,90]){
         difference(){
             union(){
@@ -82,7 +83,7 @@ module clamp(wandstaerke,d_bushing,h_bushing, oeffnung ) {
       
             }
             //Loch
-            cylinder(d1=d_bushing,d2=d_bushing,h=h_bushing);
+            cylinder(d1=d_bushing+d_bushing_corr,d2=d_bushing+d_bushing_corr,h=h_bushing);
         }
     }
 }
@@ -136,7 +137,7 @@ module gt2_holder(position_tweak_x,position_tweak_y,position_tweak_z,holder_heig
             union(){
                 //Klammer
                 translate([-d_axis/2,-h_bushing/2,-wandstaerke-gr_z]){
-                    clamp(wandstaerke,d_bushing,h_bushing,oeffnung_offen); //Große Öffnung
+                    clamp(wandstaerke,d_bushing,h_bushing,oeffnung_offen, d_bushing_corr); //Große Öffnung + 0.2, weil nicht klippen soll
                 }
                 
                 // Steg
