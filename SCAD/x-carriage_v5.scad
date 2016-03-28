@@ -1,18 +1,24 @@
 $fn=50;
 
-//Maße Grundplatte
-//gr_x=75;
-gr_x=60;
-gr_y=56;
-gr_z=5;
+//Achsenabstand (radius zu radius)
+d_axis=45;
 
-//Schrauben links
-d_m3=3.3; //Durchmesser
+//Maße Grundplatte
+gr_x=d_axis+12;
+gr_y=56;
+gr_z=4;
+
+//Schrauben M3 Konstanten
+d_m3=3.3; 
 h_m3=15;
 
-//Schrauben rechts
+//Schrauben M4 Konstaten
 d_m4=4.3;
 h_m4=15;
+
+//Schrauben Maße
+d_s = d_m3; //Durchmesser
+h_s = d_m3;
 
 //Schraubenabstand
 s_horizontal=11.5;
@@ -23,8 +29,8 @@ wandstaerke=2;
 d_bushing=12;
 h_bushing=15;
 
-//Achsenabstand (radius zu radius)
-d_axis=45;
+oeffnung_geschlossen=90; //Winkel der öffnung
+oeffnung_offen=210;
 
 //GT2 Holder
 holder_height=12;
@@ -42,51 +48,43 @@ ct_x=2;
 ct_y=3.5;
 ct_z=gr_z+5;
 
+//Federaussparung
 
-module clamp(wandstaerke,d_bushing,h_bushing) {
-    
+    //breite Stelle
+    fab_x = d_bushing+wandstaerke+3;
+    fab_y = h_bushing+3;
+
+    //dünne Stelle
+    fad_x = 10;
+    fad_y = 40;
+
+    //Federsteg
+    steg_y = fad_y; //Länge
+    steg_z = gr_z+1; //So dick wie die Platte
+    steg_x = 2; // Dicke
+
+
+//Klammerplatte
+module clamp(wandstaerke,d_bushing,h_bushing, oeffnung ) {
     rotate([0,90,90]){
-        //Klammer
-        rotate([0,0,45]){
-        rotate_extrude(angle = 270){
-            translate([6, 0, 0])
-            square([wandstaerke,h_bushing]);
-        }
-        }
-
-        //Klammerplatte
         difference(){
-            translate([-(d_bushing)/2+wandstaerke/2,0,h_bushing/2]){
-                cube([d_bushing/2,d_bushing+wandstaerke,h_bushing], center=true);
+            union(){
+                //Klammer
+                rotate([0,0,oeffnung/2]){
+                rotate_extrude(angle = 360-oeffnung){
+                    square([wandstaerke+d_bushing/2,h_bushing]);
+                }
+                }
+                //Basis
+                translate([-(d_bushing)/2+wandstaerke/2-gr_z/2,0,h_bushing/2]){
+                    cube([d_bushing/2+gr_z/2,d_bushing+wandstaerke,h_bushing], center=true);
+                } 
+      
             }
-            
+            //Loch
             cylinder(d1=d_bushing,d2=d_bushing,h=h_bushing);
         }
     }
-
-}
-
-module clamp_short(wandstaerke,d_bushing,h_bushing) {
-    
-    rotate([0,90,90]){
-        //Klammer
-        rotate([0,0,105]){
-        rotate_extrude(angle = 150){
-            translate([6, 0, 0])
-            square([wandstaerke,h_bushing]);
-        }
-        }
-
-        //Klammerplatte
-        difference(){
-            translate([-(d_bushing)/2+wandstaerke/2,0,h_bushing/2]){
-                cube([d_bushing/2,d_bushing+wandstaerke,h_bushing], center=true);
-            }
-            
-            cylinder(d1=d_bushing,d2=d_bushing,h=h_bushing);
-        }
-    }
-
 }
 
 
@@ -122,40 +120,60 @@ module gt2_holder(position_tweak_x,position_tweak_y,position_tweak_z,holder_heig
     }
 }
 
-difference(){
-    
-    //Grundplatte
-    union (){
-        
-        //Klammern
+//Klammern
 
         //Obere
-        translate([d_axis/2,-gr_y/2-2,-wandstaerke/2-gr_z]){
-            clamp(wandstaerke,d_bushing,h_bushing);
+        translate([d_axis/2,-gr_y/2-2,-wandstaerke-gr_z]){
+            clamp(wandstaerke,d_bushing,h_bushing, oeffnung_geschlossen);
         }
 
-        translate([d_axis/2,gr_y/2-h_bushing+2,-wandstaerke/2-gr_z]){
-            clamp(wandstaerke,d_bushing,h_bushing);
+        translate([d_axis/2,gr_y/2-h_bushing+2,-wandstaerke-gr_z]){
+            clamp(wandstaerke,d_bushing,h_bushing, oeffnung_geschlossen);
         }
         
-        //Untere
-        //links
-        translate([-d_axis/2,-gr_y/2-2,-wandstaerke/2-gr_z]){
-            clamp_short(wandstaerke,d_bushing,h_bushing);
-        }
-
-        //rechts
-        translate([-d_axis/2,gr_y/2-h_bushing+2,-wandstaerke/2-gr_z]){
-            clamp_short(wandstaerke,d_bushing,h_bushing);
-        }
-        translate([0,0,gr_z/2]){
-            minkowski(){
-                cube([gr_x,gr_y,gr_z], center=true);
-                cylinder(r=2,h=1);
+        //Untere mit Steg in der Aussparung
+        difference(){
+            union(){
+                //Klammer
+                translate([-d_axis/2,-h_bushing/2,-wandstaerke-gr_z]){
+                    clamp(wandstaerke,d_bushing,h_bushing,oeffnung_offen); //Große Öffnung
+                }
+                
+                // Steg
+                translate([-d_axis/2-steg_x/2,-fad_y/2,gr_z-steg_z+1]){
+                    cube([steg_x, fad_y, steg_z]);
+             
+                }
+            }
+            //Kabelbinder oben
+            translate([-d_axis/2+(d_bushing-wandstaerke)/2,-ct_y/2,-1]){
+                cube([ct_x,ct_y,ct_z]);
+            }
+            
+            //Kabelbinder untere
+            translate([-d_axis/2-(d_bushing+wandstaerke)/2,-ct_y/2,-1]){
+                cube([ct_x,ct_y,ct_z]);
+            }
+            
+            //Kabelbinder aussparung 
+            translate([-d_axis/2-(d_bushing+wandstaerke)/2,-ct_y/2,gr_z-.75]){
+                cube([(ct_x+d_bushing+wandstaerke),ct_y,1.75]);
             }
         }
-   
+        
+        
+
+
+//Grundplatte
+difference(){
+    //Platte    
+    translate([-gr_x/2,-gr_y/2,0]){
+        minkowski(){
+            cube([gr_x,gr_y,gr_z]);
+            cylinder(r=2,h=1); //Wird durch Zylinder gr_z+1 dick!
+        }
     }
+
     //Schraubenlöcher recht
     translate([s_horizontal,s_vertikal,0]){
         cylinder(d1=d_m4, d2=d_m4, h=h_m4);
@@ -165,7 +183,7 @@ difference(){
         cylinder(d1=d_m4, d2=d_m4, h=h_m4);
     }
     
-    //Scraubenlöcher links
+    //Schraubenlöcher links
     translate([s_horizontal,-s_vertikal,0]){
         cylinder(d1=d_m4, d2=d_m4, h=h_m4);
     }
@@ -173,38 +191,56 @@ difference(){
     translate([-s_horizontal,-s_vertikal,0]){
         cylinder(d1=d_m4, d2=d_m4, h=h_m4);
     }
+    
+    //Federausspraung breit stelle
+    translate([-d_axis/2-fab_x/2,-fab_y/2,0]){
+        cube([fab_x, fab_y, gr_z+1]);
+ 
+    }
+    
+    //Federausspraung dünn stelle
+    translate([-d_axis/2-fad_x/2,-fad_y/2,0]){
+        cube([fad_x, fad_y, gr_z+1]);
+ 
+    }
+    
+    //Federausspraung komplett (Material sparen)
+    translate([-d_axis/2-fab_x-steg_x/2,-(gr_y+4)/2,0]){
+        cube([fab_x, gr_y+4, gr_z+1]);
+ 
+    }
 
     //Kabelbinder Rechts
-    //Kabelbinder rechts unten
-    translate([-d_axis/2-8,gr_y/2-h_bushing+2+7.5-ct_x,-2]){
-        cube([ct_x,ct_y,ct_z]);
-    }   
-    
-    //Kabelbinder rechts oben
-    translate([-d_axis/2-7+d_bushing+wandstaerke,gr_y/2-h_bushing+2+7.5-ct_x,-2]){
-        cube([ct_x,ct_y,ct_z]);
-    }
-    
-    //Kabelbinder aussparung rechts
-    translate([-d_axis/2-8,gr_y/2-h_bushing+2+7.5-ct_x,gr_z-.75]){
-        cube([(ct_x+d_bushing+wandstaerke),ct_y,1.75]);
-    }
-    
-    //Kabelbinder Links
-    //Kabelbinder links unten
-    translate([-d_axis/2-8,-gr_y/2-2+7.5-ct_y/2,-2]){
-        cube([ct_x,ct_y,ct_z]);
-    }   
-    
-    //Kabelbinder links oben
-    translate([-d_axis/2-7+d_bushing+wandstaerke,-gr_y/2-2+7.5-ct_y/2,-2]){
-        cube([ct_x,ct_y,ct_z]);
-    }
-    
-    //Kabelbinder aussparung links
-    translate([-d_axis/2-8,-gr_y/2-2+7.5-ct_y/2,gr_z-.75]){
-        cube([(ct_x+d_bushing+wandstaerke),ct_y,1.75]);
-    }
+//    //Kabelbinder rechts unten
+//    translate([-d_axis/2-8,gr_y/2-h_bushing+2+7.5-ct_x,-2]){
+//        cube([ct_x,ct_y,ct_z]);
+//    }   
+//    
+//    //Kabelbinder rechts oben
+//    translate([-d_axis/2-7+d_bushing+wandstaerke,gr_y/2-h_bushing+2+7.5-ct_x,-2]){
+//        cube([ct_x,ct_y,ct_z]);
+//    }
+//    
+//    //Kabelbinder aussparung rechts
+//    translate([-d_axis/2-8,gr_y/2-h_bushing+2+7.5-ct_x,gr_z-.75]){
+//        cube([(ct_x+d_bushing+wandstaerke),ct_y,1.75]);
+//    }
+//    
+//    //Kabelbinder Links
+//    //Kabelbinder links unten
+//    translate([-d_axis/2-8,-gr_y/2-2+7.5-ct_y/2,-2]){
+//        cube([ct_x,ct_y,ct_z]);
+//    }   
+//    
+//    //Kabelbinder links oben
+//    translate([-d_axis/2-7+d_bushing+wandstaerke,-gr_y/2-2+7.5-ct_y/2,-2]){
+//        cube([ct_x,ct_y,ct_z]);
+//    }
+//    
+//    //Kabelbinder aussparung links
+//    translate([-d_axis/2-8,-gr_y/2-2+7.5-ct_y/2,gr_z-.75]){
+//        cube([(ct_x+d_bushing+wandstaerke),ct_y,1.75]);
+//    }
     
 }
 
