@@ -45,9 +45,9 @@ p_tweak2_y=-8;
 p_tweak2_z=-holder_height;
 
 //Kabelbinder Maße
-ct_x=2;
+ct_x=1.5;
 ct_y=3.5;
-ct_z=gr_z+5;
+ct_z=gr_z+3;
 
 //Federaussparung
 
@@ -133,32 +133,32 @@ module gt2_holder(position_tweak_x,position_tweak_y,position_tweak_z,holder_heig
         }
         
         //Untere mit Steg in der Aussparung
-        difference(){
-            union(){
-                //Klammer
-                translate([-d_axis/2,-h_bushing/2,-wandstaerke-gr_z]){
+        translate([-d_axis/2,-h_bushing/2,-wandstaerke-gr_z]){
+            difference(){
+                union(){
+                    //Klammer
                     clamp(wandstaerke,d_bushing,h_bushing,oeffnung_offen, d_bushing_corr); //Große Öffnung + 0.2, weil nicht klippen soll
+                    
+                    // Steg
+                    translate([-steg_x/2,-fad_y/2+h_bushing/2,d_bushing/2+d_bushing_corr/2]){
+                        cube([steg_x, fad_y, steg_z]);
+                 
+                    }
+                }
+                //Kabelbinder oben
+                translate([(d_bushing+wandstaerke)/2-ct_x,-ct_y/2+h_bushing/2,d_bushing/2+gr_z-ct_z+1]){
+                    cube([ct_x+1,ct_y,ct_z]);
                 }
                 
-                // Steg
-                translate([-d_axis/2-steg_x/2,-fad_y/2,gr_z-steg_z+1]){
-                    cube([steg_x, fad_y, steg_z]);
-             
+                //Kabelbinder untere
+                translate([-(d_bushing+wandstaerke)/2-1,-ct_y/2+h_bushing/2,d_bushing/2+gr_z-ct_z+1]){
+                    cube([ct_x+1,ct_y,ct_z]);
                 }
-            }
-            //Kabelbinder oben
-            translate([-d_axis/2+(d_bushing-wandstaerke)/2,-ct_y/2,-1]){
-                cube([ct_x,ct_y,ct_z]);
-            }
-            
-            //Kabelbinder untere
-            translate([-d_axis/2-(d_bushing+wandstaerke)/2,-ct_y/2,-1]){
-                cube([ct_x,ct_y,ct_z]);
-            }
-            
-            //Kabelbinder aussparung 
-            translate([-d_axis/2-(d_bushing+wandstaerke)/2,-ct_y/2,gr_z-.75]){
-                cube([(ct_x+d_bushing+wandstaerke),ct_y,1.75]);
+                
+                //Kabelbinder aussparung 
+                translate([-(ct_x+d_bushing+wandstaerke)/2,-ct_y/2+h_bushing/2,d_bushing/2+gr_z-ct_x/2]){
+                    cube([(ct_x+d_bushing+wandstaerke),ct_y,ct_x+1]);
+                }
             }
         }
         
