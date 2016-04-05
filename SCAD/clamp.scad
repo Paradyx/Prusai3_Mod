@@ -33,13 +33,13 @@ module clamp_u(wandstaerke,d_bushing,h_bushing, basis_h, oeffnung) {
 
 module clamp(wandstaerke,d_bushing,h_bushing, basis_h, oeffnung, center){
     if(center== true) {
-        translate([0,-h_bushing/2,+d_bushing/2+wandstaerke+basis_h]){ rotate([0,-90,-90]) {
-            clamp_u(wandstaerke, d_bushing, h_bushing,basis_h, oeffnung_offen, ct);
+        translate([0,-h_bushing/2,d_bushing/2+wandstaerke+basis_h]){ rotate([0,-90,-90]) {
+            clamp_u(wandstaerke, d_bushing, h_bushing,basis_h, oeffnung, ct);
         }}
     } 
     else {
-        translate([0,d_bushing/2+wandstaerke/2,-d_bushing/2-wandstaerke-basis_h]){ rotate([0,90,0]) {
-            clamp_u(wandstaerke, d_bushing, h_bushing,basis_h, oeffnung_offen, ct);
+        translate([d_bushing/2+wandstaerke/2,0,d_bushing/2+wandstaerke+basis_h]){ rotate([0,-90,-90]) {
+            clamp_u(wandstaerke, d_bushing, h_bushing,basis_h, oeffnung, ct);
         }}
     }
 }
@@ -90,12 +90,12 @@ module clamp_with_ct_u(wandstaerke,d_bushing,h_bushing,basis_h, oeffnung,ct) {
 module clamp_with_ct(wandstaerke,d_bushing,h_bushing, basis_h, oeffnung, ct, center=false){
     if(center == true) {
          translate([0,-h_bushing/2,+d_bushing/2+wandstaerke+basis_h]){ rotate([0,-90,-90]) {
-            clamp_with_ct_u(wandstaerke, d_bushing, h_bushing,basis_h, oeffnung_offen, ct);
+            clamp_with_ct_u(wandstaerke, d_bushing, h_bushing,basis_h, oeffnung, ct);
         }}
     } 
     else {
         translate([d_bushing/2+wandstaerke/2,0,d_bushing/2+wandstaerke+basis_h]){ rotate([0,-90,-90]) {
-            clamp_with_ct_u(wandstaerke, d_bushing, h_bushing, basis_h, oeffnung_offen, ct);
+            clamp_with_ct_u(wandstaerke, d_bushing, h_bushing, basis_h, oeffnung, ct);
         }}
     }
 }
