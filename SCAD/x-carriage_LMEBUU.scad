@@ -132,27 +132,27 @@ difference(){
     }}
     
     //Kabelbinder Untere
-     translate([L_thickness+L_diameter/2-d_axis/2,-L_length/2-L_thickness]){rotate([0,180,0]){
+     translate([L_thickness+L_diameter/2-d_axis/2,-L_length/2-L_thickness,-0.01]){rotate([0,180,0]){
         LMEBUU_holder_cts(L_thickness, L_thickness, L_diameter, L_length,0, ct, amount=1);
     }}
     
     
 
     //Schraubenlöcher recht
-    translate([s_horizontal,s_vertikal,-L_diameter/2]){
+    translate([s_horizontal,s_vertikal,-L_diameter/2-0.01]){
         cylinder(d1=d_m4, d2=d_m4, h=h_m4);
     }
     
-    translate([-s_horizontal,s_vertikal,-L_diameter/2]){
+    translate([-s_horizontal,s_vertikal,-L_diameter/2-0.01]){
         cylinder(d1=d_m4, d2=d_m4, h=h_m4);
     }
     
     //Schraubenlöcher links
-    translate([s_horizontal,-s_vertikal,-L_diameter/2]){
+    translate([s_horizontal,-s_vertikal,-L_diameter/2-0.01]){
         cylinder(d1=d_m4, d2=d_m4, h=h_m4);
     }
 
-    translate([-s_horizontal,-s_vertikal,-L_diameter/2]){
+    translate([-s_horizontal,-s_vertikal,-L_diameter/2-0.01]){
         cylinder(d1=d_m4, d2=d_m4, h=h_m4);
     }
     

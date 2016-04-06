@@ -100,6 +100,6 @@ module clamp_with_ct(thickness,diameter,length,base_height, opening, ct, center=
     }
 }
 
-clamp(2, 16, 25, 0,180, [1.5, 2]);
+//clamp(2, 16, 25, 0,180, [1.5, 2]);
 
 

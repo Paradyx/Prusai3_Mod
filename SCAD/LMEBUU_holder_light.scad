@@ -5,7 +5,6 @@
 //h_bushing=15;
 
 use <LMEBUU_holder.scad>;
-use <clamp.scad>;
 
 //Klammer (unrotiert)
 module LMEBUU_holder_light_u(thickness_w,thickness_l,diameter,length,rod_diameter, base_height) {
@@ -53,28 +52,28 @@ module LMEBUU_holder_light(thickness_w,thickness_l,diameter,length,rod_diameter,
 }
 
 //Klammer mit Kabelbinder-Aussparung (unrotiert)
-module LMEBUU_holder_light_with_ct_u(thickness_w,thickness_l,diameter,length,rod_diameter, base_height,ct) {
+module LMEBUU_holder_light_with_cts_u(thickness_w,thickness_l,diameter,length,rod_diameter, base_height,ct, cts_amount) {
     difference(){
         LMEBUU_holder_light_u(thickness_w,thickness_l,diameter,length,rod_diameter, base_height);
-        LMEBUU_holder_ct_u(thickness_w,thickness_l, diameter, length, ct);
+        LMEBUU_holder_cts_u(thickness_w,thickness_l, diameter, length, ct, cts_amount);
     }
 }
 
 
 
-module LMEBUU_holder_light_with_ct(thickness_w,thickness_l,diameter,length,rod_diameter,base_height,ct,center=false){
+module LMEBUU_holder_light_with_cts(thickness_w,thickness_l,diameter,length,rod_diameter,base_height,ct,cts_amount, center=false){
     if(center == true) {
         translate([0,-length/2-thickness_l,base_height+diameter/2]){ rotate([0,-90,-90]) {
-            LMEBUU_holder_light_with_ct_u(thickness_w,thickness_l,diameter,length,rod_diameter, base_height, ct);
+            LMEBUU_holder_light_with_cts_u(thickness_w,thickness_l,diameter,length,rod_diameter, base_height, ct, cts_amount);
         }}
     } 
     else {
         translate([diameter/2+thickness_w,0,base_height+diameter/2]){ rotate([0,-90,-90]) {
-            LMEBUU_holder_light_with_ct_u(thickness_w,thickness_l,diameter,length,rod_diameter, base_height, ct);
+            LMEBUU_holder_light_with_cts_u(thickness_w,thickness_l,diameter,length,rod_diameter, base_height, ct, cts_amount);
         }}
     }
 }
-$fn=50;
-LMEBUU_holder_light_with_ct_u(2,2,16,25,10,5,[1.5,2], center=false);
+//$fn=50;
+//LMEBUU_holder_light_with_cts(2,2,16,25,10,0,[1.5,3.5],1, center=false);
 //aussparungen(5, 2,16,25,5, [1.5,2], center=false);
 
