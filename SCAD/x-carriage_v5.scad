@@ -122,17 +122,17 @@ translate([-steg_x/2-d_axis/2,+h_bushing/2,0]){
 
 //Obere
 translate([(d_bushing+wandstaerke)/2+d_axis/2,-gr_y/2,gr_z]){rotate([0,180,0]){
-    clamp(wandstaerke,d_bushing,h_bushing,gr_z-wandstaerke, oeffnung_geschlossen);
+    clamp(wandstaerke,d_bushing,h_bushing,gr_z-wandstaerke, opening_closed);
 }}
 
  //Obere
 translate([(d_bushing+wandstaerke)/2+d_axis/2,+gr_y/2-h_bushing,gr_z]){rotate([0,180,0]){
-    clamp(wandstaerke,d_bushing,h_bushing,gr_z-wandstaerke, oeffnung_geschlossen);
+    clamp(wandstaerke,d_bushing,h_bushing,gr_z-wandstaerke, opening_closed);
 }}
 
 //Untere in der Aussparung
 translate([(d_bushing+wandstaerke)/2-d_axis/2,-h_bushing/2,gr_z+1]){rotate([0,180,0]){
-    clamp_with_ct(wandstaerke,d_bushing,h_bushing,gr_z-wandstaerke+1,oeffnung_offen, ct); 
+    clamp_with_ct(wandstaerke,d_bushing,h_bushing,gr_z-wandstaerke+1,opening_open, ct); 
 }}
 
 
